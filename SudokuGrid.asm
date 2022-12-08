@@ -31,9 +31,21 @@ wrong: .asciiz "Incorrect value, please try again"
 
 correct: .asciiz "Correct value"
 
+wrongSpace: .asciiz "Invalid space value, please try again\n"
+
+wrongInput: .asciiz "Invalid input value, please try again\n"
+
+winMsg: .asciiz "Good Job! You Win!"
+
 .macro pSpace
 	li $v0, 4
 	la $a0, space
+	syscall
+.end_macro 
+
+.macro print(%x)
+	li $v0, 4
+	la $a0, %x
 	syscall
 .end_macro 
 
@@ -46,9 +58,7 @@ main:
 	
 
 begin: 
-	li $v0, 4
-	la $a0, lineOne #print first two lines
-	syscall
+	print(lineOne)
 	j newline
 
 #
@@ -70,83 +80,118 @@ createPuzzle:
 	j createPuzzle
 	
 line: 
-	li $v0 4
-	la $a0, pipe #print a pipe character
-	syscall
+	print(pipe)
 	pSpace
 	j createPuzzle
 	
 pipes: 
-	beq $t1, 1 newline #if it is first line, skip printing pipe
-	li $v0 4
-	la $a0, pipe #print pipe
-	syscall
+	beq $t1, 1 newline #if it is first line, skip printing pipe (this is for the pipe at the end of the line
+	print(pipe)
 	j newline
 	
 	
 newline: 
-	li $v0, 4
-	la $a0, newLine #print a new line character
-	syscall
+	print(newLine)
 	li $v0, 1
 	move $a0, $t1 #print row number
 	syscall 
 	addi $t1, $t1, 1 #increment row number
-	li $v0, 4
-	la $a0, space #print space
-	syscall
+	pSpace
 	j line
 
 middle:
-	li $v0 4
-	la $a0, mid #print middle line
-	syscall
+	print(mid)
 	j newline
 	
 endLine: 
-	li $v0, 4
-	la $a0, end #print end dashes and jump to user input
-	syscall
+	print(end)
 	j user
 
 user: 
-	la $a0, rowIn #print out input message and get row input
-	syscall
+	#make t0 0 and go to check win
+	li $t0 0
+	jal checkWin
+	#print row and col input messages and take input
+	print(rowIn)
 	li $v0, 5 
 	syscall
 	move $t0, $v0
-	li $v0, 4
-	la $a0, colIn #print out input message and get col input
-	syscall
+	print(colIn)
 	li $v0, 5
 	syscall
 	move $t1, $v0
+	#check if this is a valid space
+	jal spaceCheck
+	#get user input
+	print(numIn)
+	li $v0, 5
+	syscall
+	move $t2, $v0
+	#check if it is a valid input
+	jal inputCheck
 	
 	sub $t0, $t0, 1 #for row calc, minus 1 then mul 4 to get start of row
 	mul $t0, $t0, 4
 	add $t0, $t0, $t1 #add 1 for column number
 	sub $t0, $t0, 1 #sub 1 again to account for starting at 0 instead of 1 aka first position is $t0 = 0 not $t0 = 1
 	
-	li $v0, 4
-	la $a0, numIn #get user input for their number to replace with
-	syscall
-	li $v0, 5
-	syscall
-	move $t1, $v0
+	lb $t1, gridOne($t0)#load byte with array offset to get the same position number
 	
-	lb $t2, gridOne($t0)#load byte with array offset to get the same position number
 	
-	bne $t1, $t2 incorrect
+	sb $t2 gridPuzzle($t0) #storing the user input value into the array memory position to replace it on the board
 	
-	sb $t1 gridPuzzle($t0) #storing the user input value into the array memory position to replace it on the board
+	j main
 	
+spaceCheck: 
+	#check if row and col are between 1-4
+	bgt $t0 4, incorrectSpace
+	blt $t0, 1 incorrectSpace
+	bgt $t1 4, incorrectSpace
+	blt $t1, 1 incorrectSpace
+	#save this return address for later
+	move $t7 $ra
+	
+	jr $ra
+
+inputCheck: 
+	#check if input is bewteen 1-4
+	bgt $t2 4, incorrectInput
+	blt $t2, 1 incorrectInput
+	
+	jr $ra
+
+incorrectSpace:
+	#print error msg and reprint board
+	print(wrongSpace)
 	j main
 
-incorrect: 
-	li $v0, 4
-	la $a0, wrong
-	syscall
-	j main
+incorrectInput:
+	#print error message and reprompt user for input
+	print(wrongInput)
+	jr $t7
+	
+	
+checkWin: 
+	#load byte with array offset to get the same position number
+	lb $t1, gridOne($t0)
+	lb $t2, gridPuzzle($t0)
+	#if they aren't equal, return to game
+	bne $t1 $t2 return
+	#if all values are equal then jump to win messgae
+	beq $t0 14 win
+	#for incrementing array and win condition
+	addi $t0, $t0 1
+	
+	j checkWin
+	
+#simply a return statement
+return:
+	jr $ra
+
+#win message
+win:
+	print(winMsg)
+	j exit
 
 
 exit:
