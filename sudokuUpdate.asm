@@ -229,7 +229,7 @@ checkWin:
 	#if they aren't equal, return to game
 	bne $t1 $t2 return
 	#if all values are equal then jump to win messgae
-	beq $t0 14 win
+	beq $t0 15 win
 	#for incrementing array and win condition
 	addi $t0, $t0 1
 	
