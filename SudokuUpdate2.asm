@@ -7,7 +7,7 @@
 	mainMenu: .asciiz "\n|--------------- Main Menu ---------------|\n1: Play Sudoku\n2: How to play\n3: Exit Program\n\n\n\n\n\n\n\n\n\n"
 	
 #how to play
-	objective: .asciiz "\nObjective: Completely fill the grid so that each vertical row, horizontal row, \nand sub grid has only one number of a type from 1 to 4."
+	objective: .asciiz "\nObjective: Completely fill the grid so that each vertical row, horizontal row, \nand sub grid has only one of a kind number from 1 to 4."
 	howtoplay1: .asciiz "\nTo fill in an empty space, indicated by a 0, input the row number and column number of the space."
 	howtoplay2: .asciiz "\nAfterward, input the number you want that is in the range of 1 to 4."
 	howtoplay3: .asciiz "\nYou will repeat this process until you complete the objective!n\n\n\n\n\n\n\n"
