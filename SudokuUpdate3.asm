@@ -36,8 +36,7 @@
 	usedSpace: .asciiz "Invalid space, part of original puzzle, please try again\n"
 	wrongInput: .asciiz "     *Invalid input value, please try again\n"
 	attemptsMsg: .asciiz "\nThe amount of attempts to solve this puzzle: "
-	winMsg: .asciiz "\nGood job! You win!\n\n\n\n\n\n"
-
+	winMsg: .asciiz "\nGood job! You win!\n1: Return to Main Menu\n2: Exit Program\n"
 
 .macro pSpace
 	li $v0, 4
@@ -271,6 +270,20 @@ win:
 	
 	#reset $t0 to 0
 	li $t0, 0
+	
+	#take user input for return to main or exit
+	li $v0, 5
+	syscall
+	move $s6, $v0
+	
+	#error handle if out of range 1-2
+	blt $s7, 1, invalidM
+	bgt $s7, 2, invalidM
+	
+	#take care of input
+	beq $s7, 1, resetGridPuzzle
+	beq $s7, 2, exit
+	
 	j resetGridPuzzle
 	
 resetGridPuzzle:
