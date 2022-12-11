@@ -36,7 +36,7 @@
 	usedSpace: .asciiz "Invalid space, part of original puzzle, please try again\n"
 	wrongInput: .asciiz "     *Invalid input value, please try again\n"
 	attemptsMsg: .asciiz "\nThe amount of attempts to solve this puzzle: "
-	winMsg: .asciiz "\nGood job! You win!\n1: Return to Main Menu\n2: Exit Program\n"
+	winMsg: .asciiz "\nGood job! You win!\n\t1: Return to Main Menu\n\t2: Exit Program\n"
 
 .macro pSpace
 	li $v0, 4
