@@ -122,8 +122,6 @@ line:
 	j createPuzzle
 	
 pipes: 
-	beq $t1, 1 newline #if it is first line, skip printing pipe (this is for the pipe at the end of the line
-				#seems to be unneccesary?
 	print(pipe)
 	j newline
 	
