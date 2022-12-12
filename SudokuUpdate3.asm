@@ -11,7 +11,7 @@
 	howtoplay1: .asciiz "\n\tTo fill in an empty space, indicated by a 0, input the row number and column number of the space."
 	howtoplay2: .asciiz "\n\tAfterward, input the number you want that is in the range of 1 to 4."
 	howtoplay3: .asciiz "\n\tYou will repeat this process until you complete the objective!\n\n\n\n"
-	choice: .asciiz "\nYour choice: "
+	choice: .asciiz "\nSelect 1 to play and 2 to exit\nYour choice: "
 
 #puzzle
 	gridOne: .byte 2 1 4 3    4 3 2 1    3 2 1 4    1 4 3 2
@@ -38,7 +38,7 @@
 	wrongInput: .asciiz "     *Invalid input value, please try again\n"
 	attemptsMsg: .asciiz "\nThe amount of attempts to solve this puzzle: "
 	winMsg: .asciiz "\nGood job! You win!\n\t1: Return to Main Menu\n\t2: Exit Program\n"
-
+	efficient: .asciiz "\nThe most efficient way to solve uses 10 attempts\n"
 .macro pSpace
 	li $v0, 4
 	la $a0, space
@@ -264,10 +264,13 @@ win:
 	li $v0, 1
 	move $a0, $t3 #prints num of attempts
 	syscall
+	li $v0, 4
+	la $a0, efficient
+	syscall
 	li $t3, 0 #reset num of attempts to 0
 	
 	print(winMsg)
-	
+	print(choice)
 	#reset $t0 to 0
 	li $t0, 0
 	
@@ -285,7 +288,6 @@ win:
 	beq $s7, 2, exit
 	
 	j resetGridPuzzle
-	
 resetGridPuzzle:
 	#load byte with array offset to get the same position number
 	lb $t1, oldGridPuzzle($t0)
