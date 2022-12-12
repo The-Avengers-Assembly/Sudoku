@@ -11,6 +11,7 @@
 	howtoplay1: .asciiz "\n\tTo fill in an empty space, indicated by a 0, input the row number and column number of the space."
 	howtoplay2: .asciiz "\n\tAfterward, input the number you want that is in the range of 1 to 4."
 	howtoplay3: .asciiz "\n\tYou will repeat this process until you complete the objective!\n\n\n\n"
+	choice: .asciiz "\nYour choice: "
 
 #puzzle
 	gridOne: .byte 2 1 4 3    4 3 2 1    3 2 1 4    1 4 3 2
@@ -59,6 +60,7 @@ main:
 	print(howtoplay1)
 	print(howtoplay2)
 	print(howtoplay3)
+	print(choice)
 	li $v0, 5
 	syscall
 	move $s7, $v0
