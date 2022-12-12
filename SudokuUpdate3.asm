@@ -1,5 +1,5 @@
 #Colin McGough, Evan Cheng, Loc Nguyen, Bryce Lam
-#11/16/2022
+#Date: 11/16/2022
 #Objective: To create a Sudoku game
 
 .data
