@@ -10,7 +10,7 @@
 	objective: .asciiz "\n\tObjective: Completely fill the grid so that each vertical row, horizontal row, \n\tand sub grid has only one of a kind number from 1 to 4."
 	howtoplay1: .asciiz "\n\tTo fill in an empty space, indicated by a 0, input the row number and column number of the space."
 	howtoplay2: .asciiz "\n\tAfterward, input the number you want that is in the range of 1 to 4."
-	howtoplay3: .asciiz "\n\tYou will repeat this process until you complete the objective!\n\n\n\n"
+	howtoplay3: .asciiz "\n\tYou will repeat this process until you complete the objective!\n"
 	choice: .asciiz "\nSelect 1 to play and 2 to exit\nYour choice: "
 
 #puzzle
